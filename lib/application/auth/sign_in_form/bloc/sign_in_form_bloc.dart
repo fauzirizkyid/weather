@@ -28,9 +28,56 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
               authFailureOrSuccess: none(),
             );
           },
-          registerWithEmailAndPasswordPressed: (e) async* {},
-          signInWithEmailAndPasswordPressed: (e) async* {},
-          signInWithGooglePressed: (e) async* {});
+          registerWithEmailAndPasswordPressed: (e) async* {
+            yield* _performActionOnAuthFacadeWithEmailAndPassword(
+              _authFacade.registerWithEmailAndPassword,
+            );
+          },
+          signInWithEmailAndPasswordPressed: (e) async* {
+            yield* _performActionOnAuthFacadeWithEmailAndPassword(
+              _authFacade.signInWithEmailAndPassword,
+            );
+          },
+          signInWithGooglePressed: (e) async* {
+            yield state.copyWith(
+              isSubmitting: true,
+              authFailureOrSuccess: none(),
+            );
+            final failureOrSuccess = await _authFacade.signInWithGoogle();
+            yield state.copyWith(
+              isSubmitting: false,
+              authFailureOrSuccess: some(failureOrSuccess),
+            );
+          });
     });
+  }
+
+  Stream<SignInFormState> _performActionOnAuthFacadeWithEmailAndPassword(
+    Future<Either<AuthFailure, Unit>> Function(
+            {required EmailAddress emailAddress, required Password password})
+        forwardedCall,
+  ) async* {
+    Either<AuthFailure, Unit> failureOrSuccess;
+
+    failureOrSuccess = await forwardedCall(
+          emailAddress: state.emailAddress, password: state.password);
+
+    final isEmailValid = state.emailAddress.isValid();
+    final isPasswordValid = state.password.isValid();
+    if (isEmailValid && isPasswordValid) {
+      yield state.copyWith(
+        isSubmitting: true,
+        authFailureOrSuccess: none(),
+      );
+
+      failureOrSuccess = await forwardedCall(
+          emailAddress: state.emailAddress, password: state.password);
+    }
+
+    yield state.copyWith(
+      isSubmitting: false,
+      showErrorMessages: true,
+      authFailureOrSuccess: optionOf(failureOrSuccess),
+    );
   }
 }

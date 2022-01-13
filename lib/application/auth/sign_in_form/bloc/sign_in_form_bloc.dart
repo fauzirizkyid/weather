@@ -21,13 +21,13 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
           emailChanged: (e) async* {
             yield state.copyWith(
               emailAddress: EmailAddress(e.emailStr),
-              authFailureOrSuccess: none(),
+              authFailureOrSuccessOption: none(),
             );
           },
           passwordChanged: (e) async* {
             yield state.copyWith(
               password: Password(e.passwordStr),
-              authFailureOrSuccess: none(),
+              authFailureOrSuccessOption: none(),
             );
           },
           registerWithEmailAndPasswordPressed: (e) async* {
@@ -43,12 +43,12 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
           signInWithGooglePressed: (e) async* {
             yield state.copyWith(
               isSubmitting: true,
-              authFailureOrSuccess: none(),
+              authFailureOrSuccessOption: none(),
             );
             final failureOrSuccess = await _authFacade.signInWithGoogle();
             yield state.copyWith(
               isSubmitting: false,
-              authFailureOrSuccess: some(failureOrSuccess),
+              authFailureOrSuccessOption: some(failureOrSuccess),
             );
           });
     });
@@ -69,7 +69,7 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
     if (isEmailValid && isPasswordValid) {
       yield state.copyWith(
         isSubmitting: true,
-        authFailureOrSuccess: none(),
+        authFailureOrSuccessOption: none(),
       );
 
       failureOrSuccess = await forwardedCall(
@@ -79,7 +79,7 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
     yield state.copyWith(
       isSubmitting: false,
       showErrorMessages: true,
-      authFailureOrSuccess: optionOf(failureOrSuccess),
+      authFailureOrSuccessOption: optionOf(failureOrSuccess),
     );
   }
 }

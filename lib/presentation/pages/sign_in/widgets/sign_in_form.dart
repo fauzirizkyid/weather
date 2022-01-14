@@ -36,10 +36,11 @@ class SignInForm extends StatelessWidget {
                 const Center(
                   child: Icon(
                     FontAwesomeIcons.cloudSunRain,
-                    size: 32,
+                    size: 140,
+                    color: Colors.blueAccent
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 32),
                 TextFormField(
                     decoration: const InputDecoration(
                       prefixIcon: Icon(FontAwesomeIcons.envelope),

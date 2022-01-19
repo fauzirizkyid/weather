@@ -11,19 +11,27 @@ class SignInForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<SignInFormBloc, SignInFormState>(
       listener: (context, state) {
-        state.authFailureOrSuccessOption.fold(
-            () => null,
-            (either) => either.fold((failure) {
-                  FlushbarHelper.createError(
-                    message: failure.map(
-                      cancelledByUser: (_) => 'Cancelled',
-                      serverError: (_) => 'Server error',
-                      emailAlreadyInUse: (_) => 'Email already in use',
-                      invalidEmailAndPasswordCombination: (_) =>
-                          'Invalid email and password combination',
-                    ),
-                  ).show(context);
-                }, (_) => null));
+        state.authFailureOrSuccessOption.map(
+          (either) => either.fold(
+            (failure) {
+              FlushbarHelper.createError(
+                message: failure.map(
+                  cancelledByUser: (_) => 'Cancelled',
+                  serverError: (_) => 'Server error',
+                  emailAlreadyInUse: (_) => 'Email already in use',
+                  invalidEmailAndPasswordCombination: (_) =>
+                      'Invalid email and password combination',
+                ),
+              ).show(context);
+            },
+            (_) {
+              // ExtendedNavigator.of(context).replace(Routes.notesOverviewPage);
+              // context
+              //     .bloc<AuthBloc>()
+              //     .add(const AuthEvent.authCheckRequested());
+            },
+          ),
+        );
       },
       builder: (context, state) {
         return Form(
@@ -34,11 +42,8 @@ class SignInForm extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               children: [
                 const Center(
-                  child: Icon(
-                    FontAwesomeIcons.cloudSunRain,
-                    size: 140,
-                    color: Colors.blueAccent
-                  ),
+                  child: Icon(FontAwesomeIcons.cloudSunRain,
+                      size: 140, color: Colors.blueAccent),
                 ),
                 const SizedBox(height: 32),
                 TextFormField(

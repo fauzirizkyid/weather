@@ -1,9 +1,9 @@
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:weather/domain/core/failures.dart';
 import 'package:weather/domain/core/value_objects.dart';
 import 'package:weather/domain/core/value_validators.dart';
 
-class EmailAddress extends ValueObject<String> {
+class EmailAddress extends ValueObject {
   @override
   final Either<ValueFailure<String>, String> value;
 
@@ -14,8 +14,7 @@ class EmailAddress extends ValueObject<String> {
   const EmailAddress._(this.value);
 }
 
-
-class Password extends ValueObject<String> {
+class Password extends ValueObject {
   @override
   final Either<ValueFailure<String>, String> value;
 

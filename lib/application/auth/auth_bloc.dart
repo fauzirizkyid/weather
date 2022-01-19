@@ -17,10 +17,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         authCheckRequested: () async {
           await Future.delayed(const Duration(seconds: 3));
           final userOption = await _authFacade.getSignedInUser();
-;
-          emit(userOption.fold(
-            () => const AuthState.unauthenticated(),
+
+          print(userOption);
+
+          emit(userOption.fold(            
             (_) => const AuthState.authenticated(),
+            (_) => const AuthState.unauthenticated(),
           ));
         },
         signedOut: () async {

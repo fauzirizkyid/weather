@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:weather/domain/auth/auth_failure.dart';
@@ -63,8 +63,15 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
     final isEmailValid = state.emailAddress.isValid();
     final isPasswordValid = state.password.isValid();
 
+    print("Validator");
+    print(isEmailValid);
+    print(isPasswordValid);
+
     failureOrSuccess = await forwardedCall(
         emailAddress: state.emailAddress, password: state.password);
+    
+    
+    print(failureOrSuccess);
 
     if (isEmailValid && isPasswordValid) {
       return state.copyWith(
@@ -79,4 +86,5 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
       authFailureOrSuccessOption: optionOf(failureOrSuccess),
     );
   }
+
 }

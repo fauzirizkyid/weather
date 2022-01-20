@@ -13,17 +13,17 @@ class LandingPage extends StatelessWidget {
         listener: (context, state) {
           state.map(
             initial: (_) {},
-            authenticated: (_) {
-              debugPrint('authenticated');
-            },
+            authenticated: (_) {},
             unauthenticated: (_) => context.replaceRoute(const LoginRoute()),
           );
         },
         child: Scaffold(
           body: Center(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('You Success!'),
+                const Text('Hello, Sometime is Hard, but you did it!'),
                 ElevatedButton(
                     onPressed: () {
                       context.read<AuthBloc>().add(const AuthEvent.signedOut());

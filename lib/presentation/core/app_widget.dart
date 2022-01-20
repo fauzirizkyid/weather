@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather/application/auth/auth_bloc.dart';
 import 'package:weather/injection.dart';
-import 'package:weather/presentation/routers/app_routes.gr.dart';
+import 'package:weather/presentation/routers/routers.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final AppRoute appRoute = AppRoute();
+    final AppRouter appRouter = AppRouter();
     return FutureBuilder(
       // Initialize FlutterFire
       future: Firebase.initializeApp(),
@@ -26,7 +26,6 @@ class AppWidget extends StatelessWidget {
           return MultiBlocProvider(
             providers: [
               BlocProvider(create: (context) {
-                debugPrint('Masuk?');
                 return getIt<AuthBloc>()
                   ..add(const AuthEvent.authCheckRequested());
               }),
@@ -34,8 +33,8 @@ class AppWidget extends StatelessWidget {
             child: MaterialApp.router(
               title: "Weather App",
               debugShowCheckedModeBanner: false,
-              routeInformationParser: appRoute.defaultRouteParser(),
-              routerDelegate: appRoute.delegate(),
+              routeInformationParser: appRouter.defaultRouteParser(),
+              routerDelegate: appRouter.delegate(),
               theme: ThemeData.light().copyWith(
                   primaryColor: Colors.green[800],
                   floatingActionButtonTheme: FloatingActionButtonThemeData(

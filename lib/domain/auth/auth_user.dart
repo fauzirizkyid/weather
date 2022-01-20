@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:weather/domain/core/value_objects.dart';
+import 'package:weather/domain/core/objects/string_objects.dart';
 
 part 'auth_user.freezed.dart';
 

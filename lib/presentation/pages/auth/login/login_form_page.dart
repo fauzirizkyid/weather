@@ -2,14 +2,17 @@ import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:weather/application/auth/sign_in_form/bloc/sign_in_form_bloc.dart';
+import 'package:weather/application/auth/auth_bloc.dart';
+import 'package:weather/application/auth/auth_login/auth_login_bloc.dart';
+import 'package:weather/presentation/routers/routers.dart';
+import 'package:auto_route/auto_route.dart';
 
-class SignInForm extends StatelessWidget {
-  const SignInForm({Key? key}) : super(key: key);
+class LoginForm extends StatelessWidget {
+  const LoginForm({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SignInFormBloc, SignInFormState>(
+    return BlocConsumer<AuthLoginBloc, AuthLoginState>(
       listener: (context, state) {
         state.authFailureOrSuccessOption.map(
           (either) => either.fold(
@@ -25,10 +28,10 @@ class SignInForm extends StatelessWidget {
               ).show(context);
             },
             (_) {
-              // ExtendedNavigator.of(context).replace(Routes.notesOverviewPage);
-              // context
-              //     .bloc<AuthBloc>()
-              //     .add(const AuthEvent.authCheckRequested());
+              context.replaceRoute(const LandingRoute());
+              context
+                  .read<AuthBloc>()
+                  .add(const AuthEvent.authCheckRequested());
             },
           ),
         );
@@ -53,15 +56,16 @@ class SignInForm extends StatelessWidget {
                     ),
                     autocorrect: false,
                     onChanged: (value) => context
-                        .read<SignInFormBloc>()
-                        .add(SignInFormEvent.emailChanged(value)),
+                        .read<AuthLoginBloc>()
+                        .add(AuthLoginEvent.emailChanged(value)),
                     validator: (_) => context
-                        .read<SignInFormBloc>()
+                        .read<AuthLoginBloc>()
                         .state
                         .emailAddress
                         .value
                         .fold(
                             (f) => f.maybeMap(
+                                  empty: (_) => 'Please input your Email',
                                   invalidEmail: (_) => 'Invalid Email',
                                   orElse: () => null,
                                 ),
@@ -75,14 +79,10 @@ class SignInForm extends StatelessWidget {
                     autocorrect: false,
                     obscureText: true,
                     onChanged: (value) => context
-                        .read<SignInFormBloc>()
-                        .add(SignInFormEvent.passwordChanged(value)),
-                    validator: (_) => context
-                        .read<SignInFormBloc>()
-                        .state
-                        .password
-                        .value
-                        .fold(
+                        .read<AuthLoginBloc>()
+                        .add(AuthLoginEvent.passwordChanged(value)),
+                    validator: (_) =>
+                        context.read<AuthLoginBloc>().state.password.value.fold(
                             (f) => f.maybeMap(
                                   shortPassword: (_) => 'Short Password',
                                   orElse: () => null,
@@ -93,16 +93,16 @@ class SignInForm extends StatelessWidget {
                     Expanded(
                         child: TextButton(
                             onPressed: () {
-                              context.read<SignInFormBloc>().add(
-                                  const SignInFormEvent
-                                      .signInWithEmailAndPasswordPressed());
+                              context.read<AuthLoginBloc>().add(
+                                  const AuthLoginEvent
+                                      .loginWithEmailAndPasswordPressed());
                             },
-                            child: const Text('Sign In'))),
+                            child: const Text('Login'))),
                     Expanded(
                         child: TextButton(
                             onPressed: () {
-                              context.read<SignInFormBloc>().add(
-                                  const SignInFormEvent
+                              context.read<AuthLoginBloc>().add(
+                                  const AuthLoginEvent
                                       .registerWithEmailAndPasswordPressed());
                             },
                             child: const Text('Register'))),
@@ -112,8 +112,8 @@ class SignInForm extends StatelessWidget {
                 ElevatedButton(
                     onPressed: () {
                       context
-                          .read<SignInFormBloc>()
-                          .add(const SignInFormEvent.signInWithGooglePressed());
+                          .read<AuthLoginBloc>()
+                          .add(const AuthLoginEvent.loginWithGooglePressed());
                     },
                     child: const Text('Sign In With Google',
                         style: TextStyle(

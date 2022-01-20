@@ -1,10 +1,10 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:weather/domain/auth/auth_failure.dart';
-import 'package:weather/domain/auth/auth_user.dart';
 
-import 'value_objects.dart';
+import 'auth_failure.dart';
+import 'auth_objects.dart';
+import 'auth_user.dart';
 
-abstract class IAuthFacade {
+abstract class IAuthRepository {
   Future<Either<AuthUser, Unit>> getSignedInUser();
   Future<Either<AuthFailure, Unit>> registerWithEmailAndPassword({
     required EmailAddress emailAddress,

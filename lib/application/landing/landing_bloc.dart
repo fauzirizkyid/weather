@@ -8,7 +8,6 @@ part 'landing_bloc.freezed.dart';
 class LandingBloc extends Bloc<LandingEvent, LandingState> {
   LandingBloc() : super(_Initial()) {
     on<LandingEvent>((event, emit) {
-      // TODO: implement event handler
     });
   }
 }
